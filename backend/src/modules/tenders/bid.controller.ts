@@ -14,6 +14,13 @@ export class BidController {
     const { businessId } = req.body;
     const { _id, role } = req.user!;
 
+    console.log('=== CREATE BID DEBUG ===');
+    console.log('Request body:', req.body);
+    console.log('Tender ID:', tenderId);
+    console.log('Business ID from body:', businessId);
+    console.log('User ID:', _id);
+    console.log('User role:', role);
+
     if (role !== 'SME') {
       throw new AppError('Only SMEs can create bids', 403);
     }
@@ -38,7 +45,19 @@ export class BidController {
       throw new AppError('Business not found', 404);
     }
 
-    if (business.owner.toString() !== _id) {
+    console.log('Business found:', {
+      id: business._id,
+      name: business.businessName,
+      owner: business.owner,
+    });
+    console.log('Ownership check:');
+    console.log('  business.owner:', business.owner);
+    console.log('  business.owner.toString():', business.owner.toString());
+    console.log('  user._id:', _id);
+    console.log('  user._id.toString():', _id.toString());
+    console.log('  Match:', business.owner.toString() === _id.toString());
+
+    if (business.owner.toString() !== _id.toString()) {
       throw new AppError('You do not own this business', 403);
     }
 

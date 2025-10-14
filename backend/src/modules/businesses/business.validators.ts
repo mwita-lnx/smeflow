@@ -11,7 +11,7 @@ export const createBusinessValidator = [
   body('category')
     .notEmpty()
     .withMessage('Category is required')
-    .isIn(BUSINESS_CATEGORIES)
+    .isMongoId()
     .withMessage('Invalid category'),
   body('subCategory')
     .optional()
@@ -34,6 +34,7 @@ export const createBusinessValidator = [
     .optional()
     .trim(),
   body('phone')
+    .optional()
     .matches(/^\+254[0-9]{9}$/)
     .withMessage('Please provide a valid Kenyan phone number (+254...)'),
   body('email')
@@ -52,15 +53,15 @@ export const createBusinessValidator = [
     .optional()
     .trim(),
   body('website')
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isURL()
     .withMessage('Please provide a valid URL'),
   body('facebookUrl')
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isURL()
     .withMessage('Please provide a valid URL'),
   body('instagramUrl')
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isURL()
     .withMessage('Please provide a valid URL'),
   body('location')
@@ -81,7 +82,7 @@ export const updateBusinessValidator = [
     .withMessage('Business name cannot exceed 100 characters'),
   body('category')
     .optional()
-    .isIn(BUSINESS_CATEGORIES)
+    .isMongoId()
     .withMessage('Invalid category'),
   body('subCategory')
     .optional()
@@ -121,15 +122,15 @@ export const updateBusinessValidator = [
     .optional()
     .trim(),
   body('website')
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isURL()
     .withMessage('Please provide a valid URL'),
   body('facebookUrl')
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isURL()
     .withMessage('Please provide a valid URL'),
   body('instagramUrl')
-    .optional()
+    .optional({ nullable: true, checkFalsy: true })
     .isURL()
     .withMessage('Please provide a valid URL'),
 ];

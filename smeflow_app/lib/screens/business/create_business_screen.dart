@@ -88,8 +88,9 @@ class _CreateBusinessScreenState extends State<CreateBusinessScreen> {
       if (result['success']) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Business created successfully! Pending verification.'),
+            content: Text('🎉 Business created successfully! Your business is now live and visible to customers.'),
             backgroundColor: AppTheme.primaryGreen,
+            duration: Duration(seconds: 4),
           ),
         );
         Navigator.of(context).pop();

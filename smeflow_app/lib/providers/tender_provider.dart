@@ -240,6 +240,7 @@ class TenderProvider with ChangeNotifier {
     required double amount,
     required String proposal,
     required int deliveryDays,
+    required String businessId,
   }) async {
     _isLoading = true;
     _error = null;
@@ -251,6 +252,7 @@ class TenderProvider with ChangeNotifier {
         amount: amount,
         proposal: proposal,
         deliveryDays: deliveryDays,
+        businessId: businessId,
       );
 
       if (result['success']) {

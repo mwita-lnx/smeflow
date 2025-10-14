@@ -28,7 +28,7 @@ class TenderService {
       final data = response.data;
       if (data['success']) {
         final List<dynamic> tendersList =
-            data['data']['data'] ?? data['data']['tenders'] ?? [];
+            data['data']['results'] ?? data['data']['data'] ?? data['data']['tenders'] ?? [];
         final tenders =
             tendersList.map((json) => Tender.fromJson(json)).toList();
         return {
@@ -191,12 +191,12 @@ class TenderService {
   // Bid operations
   Future<Map<String, dynamic>> getTenderBids(String tenderId) async {
     try {
-      final response = await _apiService.get('/tenders/$tenderId/bids');
+      final response = await _apiService.get('/bids/tender/$tenderId');
 
       final data = response.data;
       if (data['success']) {
         final List<dynamic> bidsList =
-            data['data']['data'] ?? data['data']['bids'] ?? [];
+            data['data']['results'] ?? data['data']['data'] ?? data['data']['bids'] ?? [];
         final bids = bidsList.map((json) => Bid.fromJson(json)).toList();
         return {'success': true, 'bids': bids};
       } else {
@@ -213,14 +213,15 @@ class TenderService {
     required double amount,
     required String proposal,
     required int deliveryDays,
+    required String businessId,
   }) async {
     try {
-      final response = await _apiService.post('/bids', data: {
-        'tender': tenderId,
+      final response = await _apiService.post('/bids/tender/$tenderId', data: {
+        'businessId': businessId,
         'amount': amount,
         'currency': 'KES',
         'proposal': proposal,
-        'deliveryDays': deliveryDays,
+        'deliveryTime': deliveryDays,
       });
 
       final data = response.data;

@@ -16,7 +16,7 @@ export interface IBusiness extends Document {
   subCounty?: string;
   address?: string;
   location?: IGeoLocation;
-  phone: string;
+  phone?: string;
   email?: string;
   whatsapp?: string;
   mpesaPaybill?: string;
@@ -97,7 +97,6 @@ const BusinessSchema = new Schema<IBusiness>(
     },
     phone: {
       type: String,
-      required: [true, 'Phone number is required'],
       match: [/^\+254[0-9]{9}$/, 'Please provide a valid Kenyan phone number (+254...)'],
     },
     email: {
@@ -142,7 +141,7 @@ const BusinessSchema = new Schema<IBusiness>(
     status: {
       type: String,
       enum: Object.values(BUSINESS_STATUS),
-      default: BUSINESS_STATUS.PENDING,
+      default: BUSINESS_STATUS.ACTIVE,
       index: true,
     },
     viewCount: {

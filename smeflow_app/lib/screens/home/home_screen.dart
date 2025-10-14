@@ -158,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   const SizedBox(height: 16),
 
-                  // Search bar and Products button row
+                  // Search bar and Search button row
                   Row(
                     children: [
                       Expanded(
@@ -187,20 +187,20 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      OutlinedButton.icon(
+                      ElevatedButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/products');
+                          _onSearch(_searchController.text);
                         },
-                        icon: const Icon(Icons.shopping_bag, size: 20),
-                        label: const Text('Products'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppTheme.accentOrange,
-                          side: BorderSide(color: AppTheme.accentOrange, width: 2),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryGreen,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          elevation: 0,
                         ),
+                        child: const Icon(Icons.search, size: 24),
                       ),
                     ],
                   ),

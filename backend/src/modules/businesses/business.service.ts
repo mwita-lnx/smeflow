@@ -168,7 +168,7 @@ export class BusinessService {
     }
 
     const [businesses, total] = await Promise.all([
-      Business.find(filter).sort(sortOption).skip(skip).limit(limit),
+      Business.find(filter).populate('category').sort(sortOption).skip(skip).limit(limit),
       Business.countDocuments(filter),
     ]);
 
