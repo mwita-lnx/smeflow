@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (user != null)
                         IconButton(
                           onPressed: () {
-                            // TODO: Navigate to profile
+                            Navigator.of(context).pushNamed('/profile');
                           },
                           icon: CircleAvatar(
                             backgroundColor: AppTheme.primaryGreen.withOpacity(0.1),
@@ -343,51 +343,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ],
-        ),
-      ),
-
-      // Floating action button for SME users or prompt guest to login
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          if (user == null) {
-            // Guest user - prompt to login
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Login Required'),
-                content: const Text('Please login as an SME to add your business'),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: const Text('Cancel'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pushNamed('/login');
-                    },
-                    child: const Text('Login'),
-                  ),
-                ],
-              ),
-            );
-          } else if (user.role == 'SME') {
-            // SME user - navigate to create business
-            Navigator.of(context).pushNamed('/create-business');
-          } else {
-            // Non-SME user
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Only SME users can add businesses'),
-              ),
-            );
-          }
-        },
-        backgroundColor: AppTheme.primaryGreen,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text(
-          'Add Business',
-          style: TextStyle(color: Colors.white),
         ),
       ),
     );

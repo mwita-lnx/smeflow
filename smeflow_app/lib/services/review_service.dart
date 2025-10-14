@@ -13,6 +13,7 @@ class ReviewService {
       final response = await _apiService.post('/ratings', data: {
         'business': businessId,
         'rating': rating,
+        'ratingType': 'BUSINESS',
         'reviewText': comment,
       });
 
@@ -85,9 +86,9 @@ class ReviewService {
 
       final data = response.data;
       if (data['success']) {
-        final reviews = (data['data']['ratings'] as List)
-            .map((json) => Review.fromJson(json))
-            .toList();
+        // Handle both response formats: data.data.data or data.data.ratings
+        final List<dynamic> reviewsList = data['data']['data'] ?? data['data']['ratings'] ?? [];
+        final reviews = reviewsList.map((json) => Review.fromJson(json)).toList();
         return {
           'success': true,
           'reviews': reviews,
@@ -117,9 +118,9 @@ class ReviewService {
 
       final data = response.data;
       if (data['success']) {
-        final reviews = (data['data']['ratings'] as List)
-            .map((json) => Review.fromJson(json))
-            .toList();
+        // Handle both response formats: data.data.data or data.data.ratings
+        final List<dynamic> reviewsList = data['data']['data'] ?? data['data']['ratings'] ?? [];
+        final reviews = reviewsList.map((json) => Review.fromJson(json)).toList();
         return {
           'success': true,
           'reviews': reviews,

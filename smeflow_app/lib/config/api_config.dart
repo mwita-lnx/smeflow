@@ -1,8 +1,8 @@
 class ApiConfig {
   // Base URLs
-  static const String baseUrl = 'https://vexatiously-monotropic-madelaine.ngrok-free.app'; // ngrok tunnel
-  // static const String baseUrl = 'http://10.0.2.2:5000'; // Android emulator
-  // static const String baseUrl = 'http://localhost:5000'; // iOS simulator / Desktop
+  // static const String baseUrl = 'https://vexatiously-monotropic-madelaine.ngrok-free.app'; // ngrok tunnel
+  static const String baseUrl = 'http://10.0.2.2:5000'; // Android emulator
+  // static const String baseUrl = 'http://localhost:5000'; // iOS simulator / Desktop / Web
   // static const String baseUrl = 'https://your-domain.com'; // Production
 
   static const String apiVersion = 'v1';

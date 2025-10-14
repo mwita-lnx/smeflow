@@ -16,10 +16,14 @@ class Category {
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
+    // Generate slug from name if not provided
+    final name = json['name'] as String;
+    final slug = json['slug'] ?? name.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '-');
+
     return Category(
       id: json['_id'] ?? json['id'],
-      name: json['name'],
-      slug: json['slug'],
+      name: name,
+      slug: slug,
       description: json['description'],
       icon: json['icon'],
       businessCount: json['businessCount'] ?? 0,

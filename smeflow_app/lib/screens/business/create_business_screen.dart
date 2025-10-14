@@ -211,7 +211,7 @@ class _CreateBusinessScreenState extends State<CreateBusinessScreen> {
                           hint: const Text('Select a category'),
                           items: categoryProvider.categories.map((category) {
                             return DropdownMenuItem(
-                              value: category.slug,
+                              value: category.id,
                               child: Text(category.name),
                             );
                           }).toList(),
