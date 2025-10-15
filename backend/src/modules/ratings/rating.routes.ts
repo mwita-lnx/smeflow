@@ -8,7 +8,6 @@ import {
 } from './rating.validators';
 import { authenticate, isBusinessOwner } from '../../middleware/auth.middleware';
 import { upload } from '../../middleware/upload.middleware';
-import { uploadLimiter } from '../../middleware/rateLimiter';
 
 const router = Router();
 
@@ -22,7 +21,6 @@ router.post('/', authenticate, validate(createRatingValidator), ratingController
 router.post(
   '/:id/images',
   authenticate,
-  uploadLimiter,
   upload.array('images', 5),
   ratingController.uploadRatingImages
 );

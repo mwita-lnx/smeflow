@@ -4,7 +4,6 @@ import { validate } from '../../middleware/validator';
 import { createProductValidator, updateProductValidator } from './product.validators';
 import { authenticate, isBusinessOwner } from '../../middleware/auth.middleware';
 import { upload } from '../../middleware/upload.middleware';
-import { uploadLimiter } from '../../middleware/rateLimiter';
 
 const router = Router();
 
@@ -26,7 +25,6 @@ router.post(
   '/:id/images',
   authenticate,
   isBusinessOwner,
-  uploadLimiter,
   upload.array('images', 5),
   productController.uploadProductImages
 );

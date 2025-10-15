@@ -8,7 +8,6 @@ import {
 } from './business.validators';
 import { authenticate, isBusinessOwner } from '../../middleware/auth.middleware';
 import { upload } from '../../middleware/upload.middleware';
-import { uploadLimiter } from '../../middleware/rateLimiter';
 
 const router = Router();
 
@@ -37,7 +36,6 @@ router.post(
   '/:id/images',
   authenticate,
   isBusinessOwner,
-  uploadLimiter,
   upload.fields([
     { name: 'logo', maxCount: 1 },
     { name: 'coverImage', maxCount: 1 },

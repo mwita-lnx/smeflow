@@ -5,7 +5,6 @@ import morgan from 'morgan';
 import compression from 'compression';
 import { config } from './config/environment';
 import { errorHandler, notFound } from './middleware/errorHandler';
-import { generalLimiter } from './middleware/rateLimiter';
 
 // Import routes
 import authRoutes from './modules/auth/auth.routes';
@@ -21,9 +20,6 @@ import bidRoutes from './modules/tenders/bid.routes';
 import analyticsRoutes from './modules/analytics/analytics.routes';
 
 const app: Application = express();
-
-// Trust proxy - required for rate limiting to work correctly behind proxies/load balancers
-app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
@@ -45,9 +41,6 @@ if (config.nodeEnv === 'development') {
 } else {
   app.use(morgan('combined'));
 }
-
-// Rate limiting
-app.use(generalLimiter);
 
 // Health check endpoint
 app.get('/health', (_req, res) => {
