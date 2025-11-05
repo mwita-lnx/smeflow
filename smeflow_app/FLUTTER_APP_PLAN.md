@@ -114,7 +114,7 @@ Border: #E0E6ED
 - Social login buttons (Google, Apple)
 
 #### Register Screen
-- Role selection (SME, Consumer, Broker)
+- Role selection (SME, Consumer)
 - Name fields
 - Email & Phone
 - Password (with strength indicator)

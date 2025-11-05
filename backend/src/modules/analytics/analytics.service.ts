@@ -7,7 +7,7 @@ interface TrackEventDTO {
   businessId: string;
   eventType: 'VIEW' | 'CLICK' | 'CONTACT_CLICK' | 'PRODUCT_VIEW' | 'SHARE';
   userId?: string;
-  userRole?: 'CONSUMER' | 'SME' | 'BROKER' | 'ADMIN';
+  userRole?: 'CONSUMER' | 'SME' | 'ADMIN';
   metadata?: {
     productId?: string;
     source?: string;

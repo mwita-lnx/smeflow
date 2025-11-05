@@ -220,7 +220,7 @@ class LandingScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         Text(
-          'SMEs showcase their business • Consumers discover products\nBrokers connect businesses with opportunities',
+          'SMEs showcase their business • Consumers discover products\nConnect with the best local businesses',
           textAlign: TextAlign.center,
           style: GoogleFonts.outfit(
             fontSize: 15,

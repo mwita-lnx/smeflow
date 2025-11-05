@@ -425,8 +425,6 @@ class ProfileScreen extends StatelessWidget {
         return 'Business Owner';
       case 'CONSUMER':
         return 'Consumer';
-      case 'BROKER':
-        return 'Broker';
       case 'ADMIN':
         return 'Administrator';
       default:

@@ -37,12 +37,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'description': 'List and manage your business',
       'icon': Icons.store_outlined,
     },
-    {
-      'value': 'BROKER',
-      'title': 'Broker',
-      'description': 'Connect businesses with customers',
-      'icon': Icons.handshake_outlined,
-    },
   ];
 
   @override

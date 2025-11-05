@@ -27,7 +27,7 @@ export const registerValidator = [
     .withMessage('Last name must be at least 2 characters'),
   body('role')
     .optional()
-    .isIn(['SME', 'CONSUMER', 'BROKER'])
+    .isIn(['SME', 'CONSUMER'])
     .withMessage('Invalid role'),
 ];
 

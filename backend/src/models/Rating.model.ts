@@ -2,9 +2,8 @@ import mongoose, { Schema, Document } from 'mongoose';
 import { REVIEW_STATUS, RATING_RANGE } from '../config/constants';
 
 export interface IRating extends Document {
-  business?: mongoose.Types.ObjectId;
-  broker?: mongoose.Types.ObjectId;
-  ratingType: 'BUSINESS' | 'BROKER';
+  business: mongoose.Types.ObjectId;
+  ratingType: 'BUSINESS';
   user: mongoose.Types.ObjectId;
   rating: number;
   reviewTitle?: string;
@@ -26,18 +25,15 @@ const RatingSchema = new Schema<IRating>(
   {
     ratingType: {
       type: String,
-      enum: ['BUSINESS', 'BROKER'],
+      enum: ['BUSINESS'],
+      default: 'BUSINESS',
       required: [true, 'Rating type is required'],
       index: true,
     },
     business: {
       type: Schema.Types.ObjectId,
       ref: 'Business',
-      index: true,
-    },
-    broker: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
+      required: [true, 'Business reference is required'],
       index: true,
     },
     user: {
@@ -115,24 +111,11 @@ const RatingSchema = new Schema<IRating>(
   }
 );
 
-// Ensure one review per user per business/broker
-RatingSchema.index({ business: 1, user: 1 }, { unique: true, sparse: true });
-RatingSchema.index({ broker: 1, user: 1 }, { unique: true, sparse: true });
+// Ensure one review per user per business
+RatingSchema.index({ business: 1, user: 1 }, { unique: true });
 
 // Index for common queries
 RatingSchema.index({ business: 1, status: 1, createdAt: -1 });
-RatingSchema.index({ broker: 1, status: 1, createdAt: -1 });
 RatingSchema.index({ user: 1, createdAt: -1 });
-
-// Validation: Either business or broker must be present
-RatingSchema.pre('validate', function (next) {
-  if (!this.business && !this.broker) {
-    next(new Error('Either business or broker reference is required'));
-  } else if (this.business && this.broker) {
-    next(new Error('Cannot rate both business and broker in same review'));
-  } else {
-    next();
-  }
-});
 
 export const Rating = mongoose.model<IRating>('Rating', RatingSchema);

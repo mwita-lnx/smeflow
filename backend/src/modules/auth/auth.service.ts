@@ -13,7 +13,7 @@ interface RegisterDTO {
   password: string;
   firstName: string;
   lastName: string;
-  role?: 'SME' | 'CONSUMER' | 'BROKER';
+  role?: 'SME' | 'CONSUMER';
 }
 
 interface LoginDTO {

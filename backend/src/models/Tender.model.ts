@@ -17,7 +17,7 @@ export interface ITender extends Document {
   requirements: string[];
   attachments: string[];
   postedBy: mongoose.Types.ObjectId;
-  postedByRole: 'CONSUMER' | 'BROKER';
+  postedByRole: 'CONSUMER';
   status: 'OPEN' | 'CLOSED' | 'AWARDED' | 'CANCELLED';
   bidsCount: number;
   awardedTo?: mongoose.Types.ObjectId;
@@ -94,7 +94,8 @@ const tenderSchema = new Schema<ITender>(
     },
     postedByRole: {
       type: String,
-      enum: ['CONSUMER', 'BROKER'],
+      enum: ['CONSUMER'],
+      default: 'CONSUMER',
       required: true,
     },
     status: {

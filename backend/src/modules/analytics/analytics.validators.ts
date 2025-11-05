@@ -18,7 +18,7 @@ export const analyticsValidators = {
       .withMessage('Invalid user ID'),
     body('userRole')
       .optional()
-      .isIn(['CONSUMER', 'SME', 'BROKER', 'ADMIN'])
+      .isIn(['CONSUMER', 'SME', 'ADMIN'])
       .withMessage('Invalid user role'),
     body('metadata')
       .optional()

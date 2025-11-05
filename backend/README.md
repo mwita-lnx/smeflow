@@ -256,7 +256,7 @@ backend/
 
 ## Database Models
 
-- **User**: User accounts (SME, Consumer, Broker, Admin)
+- **User**: User accounts (SME, Consumer, Admin)
 - **Business**: Business profiles and information
 - **Product**: Products/services offered by businesses
 - **Rating**: Reviews and ratings for businesses

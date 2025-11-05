@@ -4,7 +4,7 @@ export interface IAnalytics extends Document {
   business: mongoose.Types.ObjectId;
   eventType: 'VIEW' | 'CLICK' | 'CONTACT_CLICK' | 'PRODUCT_VIEW' | 'SHARE';
   userId?: mongoose.Types.ObjectId;
-  userRole?: 'CONSUMER' | 'SME' | 'BROKER' | 'ADMIN';
+  userRole?: 'CONSUMER' | 'SME' | 'ADMIN';
   metadata?: {
     productId?: string;
     source?: string; // 'search', 'category', 'featured', 'direct'
@@ -41,7 +41,7 @@ const analyticsSchema = new Schema<IAnalytics>(
     },
     userRole: {
       type: String,
-      enum: ['CONSUMER', 'SME', 'BROKER', 'ADMIN'],
+      enum: ['CONSUMER', 'SME', 'ADMIN'],
     },
     metadata: {
       productId: String,

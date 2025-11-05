@@ -6,12 +6,12 @@ import { AuthRequest } from '../../shared/interfaces';
 import { AppError } from '../../middleware/errorHandler';
 
 export class TenderController {
-  // Create tender (CONSUMER or BROKER only)
+  // Create tender (CONSUMER only)
   createTender = asyncHandler(async (req: AuthRequest, res: Response) => {
     const { role, _id } = req.user!;
 
-    if (role !== 'CONSUMER' && role !== 'BROKER') {
-      throw new AppError('Only consumers and brokers can create tenders', 403);
+    if (role !== 'CONSUMER') {
+      throw new AppError('Only consumers can create tenders', 403);
     }
 
     const tender = await Tender.create({

@@ -118,7 +118,7 @@ class _PostTenderScreenState extends State<PostTenderScreen> {
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('🎉 Tender posted successfully! SMEs and Brokers can now submit bids.'),
+            content: Text('🎉 Tender posted successfully! SMEs can now submit bids.'),
             backgroundColor: AppTheme.primaryGreen,
             duration: Duration(seconds: 4),
           ),
