@@ -308,36 +308,160 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
-                  return RefreshIndicator(
-                    onRefresh: () async => _loadData(),
-                    child: GridView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.all(20),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                      ),
-                      itemCount: businessProvider.businesses.length +
-                          (businessProvider.isLoading ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == businessProvider.businesses.length) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
+                  final pagination = businessProvider.pagination;
+                  final currentPage = pagination?['page'] ?? 1;
+                  final totalPages = pagination?['totalPages'] ?? 1;
 
-                        final business = businessProvider.businesses[index];
-                        return BusinessCard(
-                          business: business,
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              '/business-detail',
-                              arguments: business.id,
-                            );
-                          },
-                        );
-                      },
-                    ),
+                  return Column(
+                    children: [
+                      Expanded(
+                        child: RefreshIndicator(
+                          onRefresh: () async => _loadData(),
+                          child: GridView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.all(20),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.75,
+                              crossAxisSpacing: 12,
+                              mainAxisSpacing: 12,
+                            ),
+                            itemCount: businessProvider.businesses.length +
+                                (businessProvider.isLoading ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index == businessProvider.businesses.length) {
+                                return const Center(child: CircularProgressIndicator());
+                              }
+
+                              final business = businessProvider.businesses[index];
+                              return BusinessCard(
+                                business: business,
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    '/business-detail',
+                                    arguments: business.id,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+
+                      // Pagination Controls
+                      if (totalPages > 1)
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.05),
+                                blurRadius: 10,
+                                offset: const Offset(0, -2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Previous Button
+                              IconButton(
+                                onPressed: currentPage > 1
+                                    ? () {
+                                        businessProvider.searchBusinesses(
+                                          query: _searchController.text.isNotEmpty
+                                              ? _searchController.text
+                                              : null,
+                                          category: _selectedCategory,
+                                          page: currentPage - 1,
+                                        );
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.chevron_left),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: currentPage > 1
+                                      ? AppTheme.primaryGreen.withOpacity(0.1)
+                                      : AppTheme.background,
+                                  foregroundColor: currentPage > 1
+                                      ? AppTheme.primaryGreen
+                                      : AppTheme.textSecondary,
+                                ),
+                              ),
+
+                              // Page Indicator
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Page $currentPage of $totalPages',
+                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  // Quick page jump dropdown
+                                  if (totalPages > 3)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: AppTheme.background,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: DropdownButton<int>(
+                                        value: currentPage,
+                                        underline: const SizedBox(),
+                                        icon: const Icon(Icons.arrow_drop_down, size: 20),
+                                        onChanged: (page) {
+                                          if (page != null) {
+                                            businessProvider.searchBusinesses(
+                                              query: _searchController.text.isNotEmpty
+                                                  ? _searchController.text
+                                                  : null,
+                                              category: _selectedCategory,
+                                              page: page,
+                                            );
+                                          }
+                                        },
+                                        items: List.generate(
+                                          totalPages,
+                                          (index) => DropdownMenuItem(
+                                            value: index + 1,
+                                            child: Text('${index + 1}'),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+
+                              // Next Button
+                              IconButton(
+                                onPressed: currentPage < totalPages
+                                    ? () {
+                                        businessProvider.searchBusinesses(
+                                          query: _searchController.text.isNotEmpty
+                                              ? _searchController.text
+                                              : null,
+                                          category: _selectedCategory,
+                                          page: currentPage + 1,
+                                        );
+                                      }
+                                    : null,
+                                icon: const Icon(Icons.chevron_right),
+                                style: IconButton.styleFrom(
+                                  backgroundColor: currentPage < totalPages
+                                      ? AppTheme.primaryGreen.withOpacity(0.1)
+                                      : AppTheme.background,
+                                  foregroundColor: currentPage < totalPages
+                                      ? AppTheme.primaryGreen
+                                      : AppTheme.textSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
                   );
                 },
               ),

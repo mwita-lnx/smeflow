@@ -67,3 +67,30 @@ export const isBusinessOwner = async (
 
   next();
 };
+
+export const optionalAuth = async (
+  req: AuthRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+
+    if (!token) {
+      next();
+      return;
+    }
+
+    const decoded = JWTUtils.verifyAccessToken(token);
+    const user = await User.findById(decoded.userId);
+
+    if (user) {
+      req.user = user as IUser;
+    }
+
+    next();
+  } catch (error) {
+    // Continue without user if token is invalid
+    next();
+  }
+};

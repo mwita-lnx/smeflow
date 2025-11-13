@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 import '../../config/app_theme.dart';
 import '../../models/product.dart';
+import '../../services/mpesa_service.dart';
+import '../../services/verification_service.dart';
+import '../../providers/auth_provider.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Product product;
@@ -15,6 +19,8 @@ class ProductDetailScreen extends StatefulWidget {
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
   int _currentImageIndex = 0;
+  bool _isProcessingPayment = false;
+  bool _isVerifying = false;
 
   @override
   Widget build(BuildContext context) {
@@ -354,22 +360,60 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   Widget _buildActionButtons() {
+    final authProvider = context.watch<AuthProvider>();
+    final isLoggedIn = authProvider.isAuthenticated;
+
     return Column(
       children: [
+        // Pay with M-Pesa Button
+        if (widget.product.isAvailable && isLoggedIn)
+          SizedBox(
+            width: double.infinity,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: _isProcessingPayment ? null : () => _showMpesaDialog(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryGreen,
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: AppTheme.textSecondary.withOpacity(0.3),
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              child: _isProcessingPayment
+                  ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.payment, size: 22),
+                        const SizedBox(width: 12),
+                        Text(
+                          'Pay with M-Pesa',
+                          style: GoogleFonts.outfit(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+            ),
+          ),
+        if (widget.product.isAvailable && isLoggedIn) const SizedBox(height: 12),
+
+        // Verify Product Button (QR Code)
         SizedBox(
           width: double.infinity,
           height: 56,
           child: ElevatedButton(
-            onPressed: widget.product.isAvailable
-                ? () {
-                    // TODO: Contact seller
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Contact feature coming soon!'),
-                      ),
-                    );
-                  }
-                : null,
+            onPressed: _isVerifying ? null : () => _showQRScanner(),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.accentOrange,
               foregroundColor: Colors.white,
@@ -379,29 +423,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 borderRadius: BorderRadius.circular(16),
               ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.chat_bubble_outline, size: 22),
-                const SizedBox(width: 12),
-                Text(
-                  'Contact Seller',
-                  style: GoogleFonts.outfit(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w600,
+            child: _isVerifying
+                ? const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.qr_code_scanner, size: 22),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Verify Product (QR)',
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
         ),
         const SizedBox(height: 12),
+
+        // View Business Button
         SizedBox(
           width: double.infinity,
           height: 56,
           child: OutlinedButton(
             onPressed: () {
-              // TODO: View business
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Viewing business details...'),
@@ -432,6 +486,302 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  // Show M-Pesa payment dialog
+  void _showMpesaDialog() {
+    final phoneController = TextEditingController();
+    final authProvider = context.read<AuthProvider>();
+    final userPhone = authProvider.user?.phone ?? '';
+
+    // Pre-fill with user's phone
+    if (userPhone.isNotEmpty) {
+      phoneController.text = userPhone;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          'Pay with M-Pesa',
+          style: GoogleFonts.outfit(fontWeight: FontWeight.w700),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Amount: ${widget.product.displayPrice}',
+              style: GoogleFonts.outfit(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.accentOrange,
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: phoneController,
+              keyboardType: TextInputType.phone,
+              decoration: InputDecoration(
+                labelText: 'M-Pesa Phone Number',
+                hintText: '+254712345678',
+                prefixIcon: const Icon(Icons.phone),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'You will receive an STK push on your phone. Enter your M-Pesa PIN to complete payment.',
+              style: GoogleFonts.outfit(
+                fontSize: 12,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _processPayment(phoneController.text);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryGreen,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Pay Now'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Process M-Pesa payment
+  Future<void> _processPayment(String phoneNumber) async {
+    if (phoneNumber.isEmpty) {
+      _showSnackbar('Please enter phone number', isError: true);
+      return;
+    }
+
+    if (!MpesaService.isValidKenyanPhone(phoneNumber)) {
+      _showSnackbar('Please enter a valid Kenyan phone number', isError: true);
+      return;
+    }
+
+    setState(() => _isProcessingPayment = true);
+
+    try {
+      final formattedPhone = MpesaService.formatPhoneNumber(phoneNumber);
+      final result = await MpesaService.initiatePayment(
+        phoneNumber: formattedPhone,
+        amount: widget.product.price,
+        accountReference: 'PROD-${widget.product.id}',
+        transactionDesc: 'Payment for ${widget.product.name}',
+      );
+
+      final checkoutRequestID = result['checkoutRequestID'];
+
+      _showSnackbar('Payment initiated! Check your phone for STK push.');
+
+      // Poll for payment status
+      await _pollPaymentStatus(checkoutRequestID);
+    } catch (e) {
+      _showSnackbar('Payment failed: ${e.toString()}', isError: true);
+    } finally {
+      setState(() => _isProcessingPayment = false);
+    }
+  }
+
+  // Poll payment status
+  Future<void> _pollPaymentStatus(String checkoutRequestID) async {
+    // Wait 6 seconds for simulation to complete
+    await Future.delayed(const Duration(seconds: 6));
+
+    try {
+      final status = await MpesaService.queryTransactionStatus(checkoutRequestID);
+
+      if (status['status'] == 'SUCCESS') {
+        _showSuccessDialog(
+          'Payment Successful!',
+          'Receipt: ${status['mpesaReceiptNumber']}\nAmount: KES ${status['amount']}',
+        );
+      } else if (status['status'] == 'FAILED') {
+        _showSnackbar('Payment failed: ${status['resultDesc']}', isError: true);
+      } else {
+        _showSnackbar('Payment is pending...', isError: false);
+      }
+    } catch (e) {
+      _showSnackbar('Failed to check payment status', isError: true);
+    }
+  }
+
+  // Show QR code scanner
+  void _showQRScanner() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.5,
+        minChildSize: 0.3,
+        maxChildSize: 0.9,
+        builder: (context, scrollController) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 12),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppTheme.textSecondary.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Text(
+                      'Verify Product',
+                      style: GoogleFonts.outfit(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Enter the QR code from the product packaging',
+                      style: GoogleFonts.outfit(
+                        fontSize: 14,
+                        color: AppTheme.textSecondary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    // Manual QR code entry
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Enter QR code',
+                        hintText: 'SF-xxxxx-xxxxx',
+                        prefixIcon: const Icon(Icons.qr_code),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onSubmitted: (qrCode) {
+                        Navigator.pop(context);
+                        _verifyProduct(qrCode);
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'QR code format: SF-xxxxx-xxxxx',
+                      style: GoogleFonts.outfit(
+                        fontSize: 12,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Verify product by QR code
+  Future<void> _verifyProduct(String qrCode) async {
+    if (qrCode.isEmpty) {
+      _showSnackbar('Please enter QR code', isError: true);
+      return;
+    }
+
+    if (!VerificationService.isValidQRCode(qrCode)) {
+      _showSnackbar('Invalid QR code format', isError: true);
+      return;
+    }
+
+    setState(() => _isVerifying = true);
+
+    try {
+      final result = await VerificationService.verifyProductByQR(
+        qrCode: qrCode,
+        deviceInfo: 'Flutter App',
+      );
+
+      if (result['isAuthentic'] == true) {
+        _showSuccessDialog(
+          'Authentic Product! ✓',
+          'Serial: ${result['serialNumber']}\n'
+          'Product: ${result['product']['name']}\n'
+          'Business: ${result['business']['businessName']}\n'
+          'Scans: ${result['totalScans']}',
+        );
+      } else {
+        _showSnackbar('⚠️ Product verification failed - may be counterfeit!', isError: true);
+      }
+    } catch (e) {
+      _showSnackbar('Verification failed: ${e.toString()}', isError: true);
+    } finally {
+      setState(() => _isVerifying = false);
+    }
+  }
+
+  // Helper methods
+  void _showSnackbar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? AppTheme.primaryRed : AppTheme.primaryGreen,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showSuccessDialog(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Row(
+          children: [
+            const Icon(Icons.check_circle, color: AppTheme.primaryGreen, size: 32),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: GoogleFonts.outfit(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          message,
+          style: GoogleFonts.outfit(),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryGreen,
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
     );
   }
 

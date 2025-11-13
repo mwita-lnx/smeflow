@@ -18,6 +18,8 @@ import adminRoutes from './modules/admin/admin.routes';
 import tenderRoutes from './modules/tenders/tender.routes';
 import bidRoutes from './modules/tenders/bid.routes';
 import analyticsRoutes from './modules/analytics/analytics.routes';
+import mpesaRoutes from './modules/mpesa/mpesa.routes';
+import verificationRoutes from './modules/verification/verification.routes';
 
 const app: Application = express();
 
@@ -65,6 +67,8 @@ app.use(`${apiPrefix}/admin`, adminRoutes);
 app.use(`${apiPrefix}/tenders`, tenderRoutes);
 app.use(`${apiPrefix}/bids`, bidRoutes);
 app.use(`${apiPrefix}/analytics`, analyticsRoutes);
+app.use(`${apiPrefix}/mpesa`, mpesaRoutes);
+app.use(`${apiPrefix}/verifications`, verificationRoutes);
 
 // 404 handler
 app.use(notFound);

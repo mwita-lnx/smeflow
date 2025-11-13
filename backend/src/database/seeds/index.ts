@@ -6,6 +6,8 @@ import { Product } from '../../models/Product.model';
 import { Rating } from '../../models/Rating.model';
 import { Tender } from '../../models/Tender.model';
 import { Bid } from '../../models/Bid.model';
+import { ProductVerification } from '../../models/ProductVerification.model';
+import { MpesaTransaction } from '../../models/MpesaTransaction.model';
 import { logger } from '../../shared/utils/logger';
 import { BUSINESS_CATEGORIES } from '../../config/constants';
 import { config } from '../../config/environment';
@@ -1119,6 +1121,489 @@ async function seedBusinessesAndProducts(users: any[]) {
         },
       ],
     },
+
+    // 13. Plumber (Jua Kali)
+    {
+      businessName: 'Otieno Plumbing Services',
+      description: 'Expert plumber - installations, repairs, water tank cleaning, drainage systems, and bathroom renovations. 24/7 emergency services available.',
+      category: 'Services',
+      owner: users[0]._id, // Reusing users for more businesses
+      phone: '+254723000001',
+      email: 'kamau.dairy@example.com',
+      whatsapp: '+254723000001',
+      county: 'Nairobi',
+      subCounty: 'Kayole',
+      address: 'Kayole North, Near Mama Lucy Hospital',
+      location: {
+        type: 'Point',
+        coordinates: [36.9167, -1.2833],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'VERIFIED',
+      products: [
+        {
+          name: 'Toilet Installation',
+          description: 'Complete toilet installation with all fittings',
+          price: 3500,
+          category: 'Installation',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Sink Installation',
+          description: 'Kitchen or bathroom sink installation',
+          price: 2000,
+          category: 'Installation',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Water Tank Cleaning (5000L)',
+          description: 'Thorough cleaning and sanitization',
+          price: 2500,
+          category: 'Maintenance',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Blocked Drain Clearing',
+          description: 'Unblock any drainage system',
+          price: 1500,
+          category: 'Repairs',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Bathroom Renovation',
+          description: 'Complete bathroom plumbing overhaul',
+          price: 25000,
+          category: 'Renovation',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 14. Poultry Farmer
+    {
+      businessName: 'Wanjiku Poultry Farm',
+      description: 'Fresh chicken, eggs, and dressed poultry. We also supply day-old chicks and offer consultancy on poultry keeping.',
+      category: 'Agriculture & Farming',
+      owner: users[1]._id,
+      phone: '+254722000013',
+      email: 'mama.fua@example.com',
+      county: 'Kiambu',
+      subCounty: 'Kikuyu',
+      address: 'Off Kikuyu-Wangige Road',
+      location: {
+        type: 'Point',
+        coordinates: [36.6639, -1.2436],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'PREMIUM',
+      products: [
+        {
+          name: 'Tray of Eggs (30 pcs)',
+          description: 'Fresh farm eggs, brown or white',
+          price: 420,
+          category: 'Eggs',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Live Chicken (Kienyeji)',
+          description: 'Free-range indigenous chicken, approx 2kg',
+          price: 800,
+          category: 'Live Poultry',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Dressed Chicken (Broiler)',
+          description: 'Ready to cook broiler chicken, 2.5kg',
+          price: 650,
+          category: 'Dressed Poultry',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Day-Old Chicks (10 pcs)',
+          description: 'Healthy day-old chicks for rearing',
+          price: 500,
+          category: 'Chicks',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 15. Boda Boda Spare Parts
+    {
+      businessName: 'Kipkemoi Motorcycle Spares',
+      description: 'Motorcycle spare parts and accessories - helmets, mirrors, chains, tires, and more. We stock for all major brands.',
+      category: 'Retail & Shop',
+      owner: users[2]._id,
+      phone: '+254721000014',
+      email: 'mwangi.welder@example.com',
+      county: 'Nairobi',
+      subCounty: 'Umoja',
+      address: 'Umoja Inner Core, Stage 2',
+      location: {
+        type: 'Point',
+        coordinates: [36.8908, -1.2750],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'BASIC',
+      products: [
+        {
+          name: 'Motorcycle Helmet',
+          description: 'Quality safety helmet, various sizes',
+          price: 1500,
+          category: 'Safety Gear',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Side Mirrors (Pair)',
+          description: 'Universal fit side mirrors',
+          price: 400,
+          category: 'Accessories',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Motorcycle Chain Set',
+          description: 'Heavy duty chain and sprocket set',
+          price: 2800,
+          category: 'Parts',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Motorcycle Tire (Front)',
+          description: 'Quality tire for common models',
+          price: 2200,
+          category: 'Tires',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Brake Pads Set',
+          description: 'Front and rear brake pads',
+          price: 800,
+          category: 'Parts',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 16. Barbershop
+    {
+      businessName: 'Kamau Fresh Cuts Barber Shop',
+      description: 'Modern barbershop - haircuts, shaves, beard trimming, and grooming. Walk-ins welcome, appointments preferred.',
+      category: 'Health & Beauty',
+      owner: users[3]._id,
+      phone: '+254720000015',
+      email: 'akinyi.tailor@example.com',
+      whatsapp: '+254720000015',
+      county: 'Nairobi',
+      subCounty: 'South B',
+      address: 'South B Shopping Center, 1st Floor',
+      location: {
+        type: 'Point',
+        coordinates: [36.8242, -1.3116],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'VERIFIED',
+      products: [
+        {
+          name: 'Regular Haircut',
+          description: 'Standard men\'s haircut and styling',
+          price: 250,
+          category: 'Haircuts',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Fade Haircut',
+          description: 'Modern fade cut with precise lines',
+          price: 350,
+          category: 'Haircuts',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Clean Shave',
+          description: 'Full head or face shave with aftershave',
+          price: 150,
+          category: 'Shaving',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Beard Trim & Shaping',
+          description: 'Beard grooming and styling',
+          price: 200,
+          category: 'Grooming',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Kids Haircut',
+          description: 'Haircut for children under 12',
+          price: 200,
+          category: 'Haircuts',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 17. Hardware Store
+    {
+      businessName: 'Njoroge Hardware & Building Materials',
+      description: 'Complete hardware store - cement, iron sheets, nails, paint, timber, and all construction materials. We deliver!',
+      category: 'Construction',
+      owner: users[4]._id,
+      phone: '+254719000016',
+      email: 'hassan.butchery@example.com',
+      county: 'Machakos',
+      subCounty: 'Machakos Town',
+      address: 'Machakos Town, Next to Bus Station',
+      location: {
+        type: 'Point',
+        coordinates: [37.2634, -1.5177],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'PREMIUM',
+      products: [
+        {
+          name: 'Cement (50kg Bag)',
+          description: 'Portland cement, 50kg bag',
+          price: 720,
+          category: 'Building Materials',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Iron Sheet (Mabati)',
+          description: 'Galvanized iron sheet, 3m',
+          price: 850,
+          category: 'Roofing',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Wire Nails (1kg)',
+          description: 'Assorted sizes wire nails',
+          price: 150,
+          category: 'Fasteners',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Paint (20L)',
+          description: 'Emulsion paint, various colors',
+          price: 4500,
+          category: 'Paint',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Timber (4x2, 12ft)',
+          description: 'Quality treated timber',
+          price: 450,
+          category: 'Timber',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 18. M-Pesa Agent
+    {
+      businessName: 'Achieng M-Pesa & Airtime Shop',
+      description: 'M-Pesa services, airtime, money transfers, bill payments. We also sell phone accessories.',
+      category: 'Services',
+      owner: users[5]._id,
+      phone: '+254718000017',
+      email: 'wanjiru.salon@example.com',
+      mpesaTill: '987654',
+      county: 'Kisumu',
+      subCounty: 'Kondele',
+      address: 'Kondele Market, Stall C45',
+      location: {
+        type: 'Point',
+        coordinates: [34.7519, -0.0917],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'VERIFIED',
+      products: [
+        {
+          name: 'M-Pesa Deposit/Withdrawal',
+          description: 'Cash in/out service',
+          price: 0,
+          category: 'Financial Services',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Airtime (All Networks)',
+          description: 'Safaricom, Airtel, Telkom airtime',
+          price: 10,
+          category: 'Airtime',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Phone Charger (Universal)',
+          description: 'Fast charging universal charger',
+          price: 500,
+          category: 'Accessories',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Phone Case',
+          description: 'Various models available',
+          price: 300,
+          category: 'Accessories',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 19. Cyber Cafe
+    {
+      businessName: 'Smart Cyber Cafe & Printing',
+      description: 'Computer services - typing, printing, photocopying, scanning, CV writing, and internet access. We also laminate and bind documents.',
+      category: 'Technology',
+      owner: users[6]._id,
+      phone: '+254717000018',
+      email: 'omondi.vegetables@example.com',
+      county: 'Nairobi',
+      subCounty: 'Githurai',
+      address: 'Githurai 45, Near Stage',
+      location: {
+        type: 'Point',
+        coordinates: [36.9333, -1.1667],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'BASIC',
+      products: [
+        {
+          name: 'Printing (Black & White)',
+          description: 'Per page printing',
+          price: 5,
+          category: 'Printing',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Printing (Color)',
+          description: 'Color printing per page',
+          price: 20,
+          category: 'Printing',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Photocopy (Per Page)',
+          description: 'Black and white photocopying',
+          price: 3,
+          category: 'Copying',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Document Binding',
+          description: 'Spiral or thermal binding',
+          price: 100,
+          category: 'Binding',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'CV Writing & Formatting',
+          description: 'Professional CV creation',
+          price: 300,
+          category: 'Services',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Lamination (A4)',
+          description: 'Document lamination',
+          price: 50,
+          category: 'Lamination',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
+
+    // 20. Matatu Spare Parts
+    {
+      businessName: 'Kariuki Matatu Spares',
+      description: 'Vehicle spare parts for matatus and PSVs - tires, batteries, brake systems, lights, and accessories.',
+      category: 'Retail & Shop',
+      owner: users[7]._id,
+      phone: '+254716000019',
+      email: 'njeri.bakery@example.com',
+      county: 'Nairobi',
+      subCounty: 'Ngara',
+      address: 'Ngara Market, Auto Section',
+      location: {
+        type: 'Point',
+        coordinates: [36.8333, -1.2594],
+      },
+      status: 'ACTIVE',
+      isVerified: true,
+      verificationLevel: 'VERIFIED',
+      products: [
+        {
+          name: 'Car Battery (70Ah)',
+          description: 'Heavy duty car battery with warranty',
+          price: 8500,
+          category: 'Batteries',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Brake Pads (Set)',
+          description: 'Quality brake pads for matatus',
+          price: 3500,
+          category: 'Brakes',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'Tire (14 inch)',
+          description: 'New tire for matatus',
+          price: 6500,
+          category: 'Tires',
+          currency: 'KES',
+          isAvailable: true,
+        },
+        {
+          name: 'LED Headlights (Pair)',
+          description: 'Bright LED headlights',
+          price: 2500,
+          category: 'Lights',
+          currency: 'KES',
+          isAvailable: true,
+        },
+      ],
+    },
   ];
 
   const createdBusinesses = [];
@@ -1341,6 +1826,55 @@ async function seedReviews(businesses: any[], consumers: any[]) {
       status: 'ACTIVE',
       ratingType: 'BUSINESS',
     },
+    // Reviews for new businesses
+    {
+      business: businesses[13]._id, // Poultry Farm
+      user: consumers[0]._id,
+      rating: 5,
+      reviewTitle: 'Fresh eggs always!',
+      reviewText: 'Best eggs in Kiambu. Fresh from the farm. Great prices too!',
+      qualityRating: 5,
+      serviceRating: 5,
+      valueRating: 5,
+      status: 'ACTIVE',
+      ratingType: 'BUSINESS',
+    },
+    {
+      business: businesses[15]._id, // Barbershop
+      user: consumers[1]._id,
+      rating: 5,
+      reviewTitle: 'Best barber in South B',
+      reviewText: 'Kamau gives the cleanest fades. Professional service and friendly atmosphere.',
+      qualityRating: 5,
+      serviceRating: 5,
+      valueRating: 5,
+      status: 'ACTIVE',
+      ratingType: 'BUSINESS',
+    },
+    {
+      business: businesses[16]._id, // Hardware
+      user: consumers[2]._id,
+      rating: 4,
+      reviewTitle: 'Good hardware store',
+      reviewText: 'Has everything you need for construction. Delivery service is reliable.',
+      qualityRating: 4,
+      serviceRating: 4,
+      valueRating: 4,
+      status: 'ACTIVE',
+      ratingType: 'BUSINESS',
+    },
+    {
+      business: businesses[18]._id, // Cyber Cafe
+      user: consumers[3]._id,
+      rating: 5,
+      reviewTitle: 'Affordable printing',
+      reviewText: 'Great service! They helped me format my CV and print documents quickly.',
+      qualityRating: 5,
+      serviceRating: 5,
+      valueRating: 5,
+      status: 'ACTIVE',
+      ratingType: 'BUSINESS',
+    },
   ];
 
   const createdReviews = await Rating.insertMany(reviews);
@@ -1467,6 +2001,54 @@ async function seedTendersAndBids(consumers: any[], businesses: any[]) {
       postedByRole: 'CONSUMER',
       status: 'OPEN',
     },
+    {
+      title: 'Plumbing Services for 5 Apartments',
+      description: 'New apartment block needs complete plumbing installation. 5 units, 2-bedroom each. Water lines, drainage, and bathroom/kitchen fixtures.',
+      category: 'Services',
+      budget: {
+        min: 150000,
+        max: 200000,
+        currency: 'KES',
+      },
+      deadline: new Date('2025-12-05'),
+      location: {
+        county: 'Nairobi',
+        subCounty: 'Donholm',
+      },
+      requirements: [
+        'Licensed plumber',
+        'Experience with apartment blocks',
+        'Provide materials list',
+        'Complete within 1 month',
+      ],
+      postedBy: consumers[4]._id,
+      postedByRole: 'CONSUMER',
+      status: 'OPEN',
+    },
+    {
+      title: 'Fresh Eggs Supply Contract',
+      description: 'Restaurant needs regular supply of fresh eggs. Approximately 20 trays per week. Looking for reliable supplier.',
+      category: 'Agriculture & Farming',
+      budget: {
+        min: 30000,
+        max: 40000,
+        currency: 'KES',
+      },
+      deadline: new Date('2025-11-25'),
+      location: {
+        county: 'Nairobi',
+        subCounty: 'Westlands',
+      },
+      requirements: [
+        'Fresh farm eggs',
+        'Consistent weekly delivery',
+        'Quality guarantee',
+        '3-month contract',
+      ],
+      postedBy: consumers[0]._id,
+      postedByRole: 'CONSUMER',
+      status: 'OPEN',
+    },
   ];
 
   const createdTenders = await Tender.insertMany(tenders);
@@ -1530,6 +2112,118 @@ async function seedTendersAndBids(consumers: any[], businesses: any[]) {
   logger.info(`✅ ${createdTenders.length} tenders with ${createdBids.length} bids seeded successfully`);
 }
 
+async function seedProductVerifications(businesses: any[], consumers: any[]) {
+  logger.info('Seeding product verifications...');
+
+  await ProductVerification.deleteMany({});
+
+  // Get some products for verification
+  const products = await Product.find().limit(10);
+
+  const verifications = [];
+
+  // Create QR codes for selected products
+  for (let i = 0; i < products.length; i++) {
+    const product = products[i];
+    const business = businesses.find(b => b._id.toString() === product.business.toString());
+
+    if (!business) continue;
+
+    // Generate QR code and serial number
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substring(2, 14);
+    const qrCode = `SF-${timestamp}-${random}`;
+
+    const productId = product._id.toString().substring(0, 6);
+    const timestampShort = Date.now().toString().substring(-8);
+    const randomShort = Math.random().toString().substring(2, 10);
+    const serialNumber = `SN${productId}${timestampShort}${randomShort}`;
+
+    // Some products have been scanned, others haven't
+    const scans = i < 5 ? [
+      {
+        scannedBy: consumers[i % consumers.length]._id,
+        scannedAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Within last week
+        location: {
+          type: 'Point',
+          coordinates: [36.8219 + Math.random() * 0.1, -1.2841 + Math.random() * 0.1],
+        },
+        ipAddress: `197.232.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`,
+        deviceInfo: 'Android 12; SM-G991B',
+      },
+    ] : [];
+
+    verifications.push({
+      product: product._id,
+      business: business._id,
+      qrCode,
+      serialNumber,
+      batchNumber: `BATCH-${Math.floor(Math.random() * 1000).toString().padStart(4, '0')}`,
+      manufacturingDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+      expiryDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
+      isAuthentic: true,
+      isActive: true,
+      scans,
+      metadata: {
+        source: 'seed_script',
+        qualityCheck: 'passed',
+      },
+    });
+  }
+
+  const createdVerifications = await ProductVerification.insertMany(verifications);
+
+  logger.info(`✅ ${createdVerifications.length} product verifications with QR codes seeded successfully`);
+  return createdVerifications;
+}
+
+async function seedMpesaTransactions(consumers: any[], businesses: any[]) {
+  logger.info('Seeding M-Pesa transactions...');
+
+  await MpesaTransaction.deleteMany({});
+
+  const transactions = [];
+
+  // Create some successful transactions
+  for (let i = 0; i < 8; i++) {
+    const consumer = consumers[i % consumers.length];
+    const business = businesses[i % businesses.length];
+
+    const merchantRequestID = `MR-SIM-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    const checkoutRequestID = `CR-SIM-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    const mpesaReceiptNumber = i < 6 ? `QBR${Math.floor(Math.random() * 100000000)}` : undefined;
+
+    const amount = [100, 500, 1000, 1500, 2000, 2500, 3000, 5000][i];
+    const status = i < 6 ? 'SUCCESS' : (i === 6 ? 'PENDING' : 'FAILED');
+
+    transactions.push({
+      merchantRequestID,
+      checkoutRequestID,
+      mpesaReceiptNumber,
+      phoneNumber: consumer.phone,
+      amount,
+      accountReference: `ORDER-${Math.floor(Math.random() * 10000)}`,
+      transactionDesc: `Payment for ${business.businessName}`,
+      status,
+      resultCode: status === 'SUCCESS' ? '0' : (status === 'FAILED' ? '1' : undefined),
+      resultDesc: status === 'SUCCESS' ? 'The service request is processed successfully.' : (status === 'FAILED' ? 'Insufficient balance' : undefined),
+      isSimulation: true,
+      user: consumer._id,
+      business: business._id,
+      metadata: {
+        source: 'seed_script',
+        testData: true,
+      },
+      createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000), // Within last week
+    });
+  }
+
+  const createdTransactions = await MpesaTransaction.insertMany(transactions);
+
+  logger.info(`✅ ${createdTransactions.length} M-Pesa transactions seeded successfully`);
+  return createdTransactions;
+}
+
 async function seed() {
   try {
     await connectDatabase();
@@ -1542,6 +2236,8 @@ async function seed() {
     const businesses = await seedBusinessesAndProducts(smeUsers);
     await seedReviews(businesses, consumerUsers);
     await seedTendersAndBids(consumerUsers, businesses);
+    await seedProductVerifications(businesses, consumerUsers);
+    await seedMpesaTransactions(consumerUsers, businesses);
 
     logger.info('🌱 All seeds completed successfully!');
     logger.info('');
@@ -1566,6 +2262,8 @@ async function seed() {
     logger.info(`   - ${businesses.length} businesses with products`);
     logger.info(`   - Reviews and ratings`);
     logger.info(`   - Sample tenders and bids`);
+    logger.info(`   - Product verifications with QR codes`);
+    logger.info(`   - M-Pesa transaction simulations`);
 
     process.exit(0);
   } catch (error) {
